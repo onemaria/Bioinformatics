@@ -1,4 +1,16 @@
+import random
 
+def RandomizedMotifSearch(Dna, k, t):
+    M = RandomMotifs(Dna, k, t)
+    BestMotifs = M
+    while True:
+        Profile = ProfileWithPseudocounts(M)
+        M = Motifs(Profile, Dna)
+        if Score(M) < Score(BestMotifs):
+            BestMotifs = M
+        else:
+            return BestMotifs
+        
 def Count(Motifs):
     count = {} 
     k = len(Motifs[0])
@@ -12,7 +24,6 @@ def Count(Motifs):
             symbol = Motifs[i][j]
             count[symbol][j] += 1
     return count
-
 
 def Profile(Motifs):
     t = len(Motifs)
@@ -52,12 +63,6 @@ def Score(Motifs):
             if motif[index] != consensus[index]:
                 count += 1
     return count
-
-def Pr(Text, Profile):
-    prob = 1
-    for i in range(len(Text)):
-        prob = prob*Profile[Text[i]][i]
-    return prob
 
 def ProfileMostProbableKmer(text, k, profile):
     p=-1
@@ -137,7 +142,7 @@ def ProfileMostProbablePattern(Text, k, Profile):
     ind = keys[0]
     return Text[ind: ind +k]
 
-import random
+
 
 def RandomMotifs(Dna, k, t):
     t = len(Dna)
@@ -148,59 +153,25 @@ def RandomMotifs(Dna, k, t):
         RandomMotif.append(Dna[i][r:r+k])
     return RandomMotif
 
-def RandomizedMotifSearch(Dna, k, t):
-    M = RandomMotifs(Dna, k, t)
-    BestMotifs = M
-    while True:
-        Profile = ProfileWithPseudocounts(M)
-        M = Motifs(Profile, Dna)
-        if Score(M) < Score(BestMotifs):
-            BestMotifs = M
-        else:
-            return BestMotifs
 
-def Normalize(Probabilities):
-    sumOfProbabilities = 0
-    newlist = {}
-    for i in Probabilities:
-        sumOfProbabilities += Probabilities.get(i)
-    for i in Probabilities:
-        newlist[i] = 0
-        for j in Probabilities:
-            if i == j:
-                newlist[i] += Probabilities[j]/sumOfProbabilities
-    return newlist
+Dna = ["GCGCCCCGCCCGGACAGCCATGCGCTAACCCTGGCTTCGATGGCGCCGGCTCAGTTAGGGCCGGAAGTCCCCAATGTGGCAGACCTTTCGCCCCTGGCGGACGAATGACCCCAGTGGCCGGGACTTCAGGCCCTATCGGAGGGCTCCGGCGCGGTGGTCGGATTTGTCTGTGGAGGTTACACCCCAATCGCAAGGATGCATTATGACCAGCGAGCTGAGCCTGGTCGCCACTGGAAAGGGGAGCAACATC",
+"CCGATCGGCATCACTATCGGTCCTGCGGCCGCCCATAGCGCTATATCCGGCTGGTGAAATCAATTGACAACCTTCGACTTTGAGGTGGCCTACGGCGAGGACAAGCCAGGCAAGCCAGCTGCCTCAACGCGCGCCAGTACGGGTCCATCGACCCGCGGCCCACGGGTCAAACGACCCTAGTGTTCGCTACGACGTGGTCGTACCTTCGGCAGCAGATCAGCAATAGCACCCCGACTCGAGGAGGATCCCG",
+"ACCGTCGATGTGCCCGGTCGCGCCGCGTCCACCTCGGTCATCGACCCCACGATGAGGACGCCATCGGCCGCGACCAAGCCCCGTGAAACTCTGACGGCGTGCTGGCCGGGCTGCGGCACCTGATCACCTTAGGGCACTTGGGCCACCACAACGGGCCGCCGGTCTCGACAGTGGCCACCACCACACAGGTGACTTCCGGCGGGACGTAAGTCCCTAACGCGTCGTTCCGCACGCGGTTAGCTTTGCTGCC",
+"GGGTCAGGTATATTTATCGCACACTTGGGCACATGACACACAAGCGCCAGAATCCCGGACCGAACCGAGCACCGTGGGTGGGCAGCCTCCATACAGCGATGACCTGATCGATCATCGGCCAGGGCGCCGGGCTTCCAACCGTGGCCGTCTCAGTACCCAGCCTCATTGACCCTTCGACGCATCCACTGCGCGTAAGTCGGCTCAACCCTTTCAAACCGCTGGATTACCGACCGCAGAAAGGGGGCAGGAC",
+"GTAGGTCAAACCGGGTGTACATACCCGCTCAATCGCCCAGCACTTCGGGCAGATCACCGGGTTTCCCCGGTATCACCAATACTGCCACCAAACACAGCAGGCGGGAAGGGGCGAAAGTCCCTTATCCGACAATAAAACTTCGCTTGTTCGACGCCCGGTTCACCCGATATGCACGGCGCCCAGCCATTCGTGACCGACGTCCCCAGCCCCAAGGCCGAACGACCCTAGGAGCCACGAGCAATTCACAGCG",
+"CCGCTGGCGACGCTGTTCGCCGGCAGCGTGCGTGACGACTTCGAGCTGCCCGACTACACCTGGTGACCACCGCCGACGGGCACCTCTCCGCCAGGTAGGCACGGTTTGTCGCCGGCAATGTGACCTTTGGGCGCGGTCTTGAGGACCTTCGGCCCCACCCACGAGGCCGCCGCCGGCCGATCGTATGACGTGCAATGTACGCCATAGGGTGCGTGTTACGGCGATTACCTGAAGGCGGCGGTGGTCCGGA",
+"GGCCAACTGCACCGCGCTCTTGATGACATCGGTGGTCACCATGGTGTCCGGCATGATCAACCTCCGCTGTTCGATATCACCCCGATCTTTCTGAACGGCGGTTGGCAGACAACAGGGTCAATGGTCCCCAAGTGGATCACCGACGGGCGCGGACAAATGGCCCGCGCTTCGGGGACTTCTGTCCCTAGCCCTGGCCACGATGGGCTGGTCGGATCAAAGGCATCCGTTTCCATCGATTAGGAGGCATCAA",
+"GTACATGTCCAGAGCGAGCCTCAGCTTCTGCGCAGCGACGGAAACTGCCACACTCAAAGCCTACTGGGCGCACGTGTGGCAACGAGTCGATCCACACGAAATGCCGCCGTTGGGCCGCGGACTAGCCGAATTTTCCGGGTGGTGACACAGCCCACATTTGGCATGGGACTTTCGGCCCTGTCCGCGTCCGTGTCGGCCAGACAAGCTTTGGGCATTGGCCACAATCGGGCCACAATCGAAAGCCGAGCAG",
+"GGCAGCTGTCGGCAACTGTAAGCCATTTCTGGGACTTTGCTGTGAAAAGCTGGGCGATGGTTGTGGACCTGGACGAGCCACCCGTGCGATAGGTGAGATTCATTCTCGCCCTGACGGGTTGCGTCTGTCATCGGTCGATAAGGACTAACGGCCCTCAGGTGGGGACCAACGCCCCTGGGAGATAGCGGTCCCCGCCAGTAACGTACCGCTGAACCGACGGGATGTATCCGCCCCAGCGAAGGAGACGGCG",
+"TCAGCACCATGACCGCCTGGCCACCAATCGCCCGTAACAAGCGGGACGTCCGCGACGACGCGTGCGCTAGCGCCGTGGCGGTGACAACGACCAGATATGGTCCGAGCACGCGGGCGAACCTCGTGTTCTGGCCTCGGCCAGTTGTGTAGAGCTCATCGCTGTCATCGAGCGATATCCGACCACTGATCCAAGTCGGGGGCTCTGGGGACCGAAGTCCCCGGGCTCGGAGCTATCGGACCTCACGATCACC"]
 
-import random
-def WeightedDie(Probabilities):
-    n = random.uniform(0, 1)
-    for p in Probabilities:
-        n -= Probabilities[p]
-        if n <= 0:
-            return p
-
-def ProfileGeneratedString(Text, profile, k):
-    n = len(Text)
-    probabilities = {}
-    for i in range(0,n-k+1):
-        probabilities[Text[i:i+k]] = Pr(Text[i:i+k], profile)
-
-    probabilities = Normalize(probabilities)
-    return WeightedDie(probabilities)
-
-def GibbsSampler(Dna, k, t, N):
-    BestMotifs = []
-    Motifs = RandomMotifs(Dna, k, t)
-    BestMotifs = Motifs
-    for j in range(1,N):
-        i = random.randint(0,t-1)
-        ReducedMotifs = []
-        for j in range(0,t):
-            if j != i:
-                ReducedMotifs.append(Motifs[j])
-        Profile = ProfileWithPseudocounts(ReducedMotifs)
-        Motif_i = ProfileGeneratedString(Dna[i], Profile, k)
-        Motifs[i] = Motif_i
-        if Score(Motifs) < Score(BestMotifs):
-                BestMotifs=Motifs
-    return BestMotifs
+k = 15
+t = len(Dna)
+N = random.randint(50,100)
+BestMotifs = RandomizedMotifSearch(Dna, k, t)
+for i in range(N):
+    m = RandomizedMotifSearch(Dna, k, t)
+    if Score(m) < Score(BestMotifs):
+        BestMotifs = m
+print(BestMotifs)
+print(Score(BestMotifs))
