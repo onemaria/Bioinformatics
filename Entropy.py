@@ -1,6 +1,7 @@
-#the more conserved the column, the smaller its entropy. 
-# Thus, entropy offers an improved method of scoring motif matrices: 
-# the entropy of a motif matrix is defined as the sum of the entropies of its columns
+# every column of profile corresponds to a probability distribution, or a collection of nonnegative numbers that sum to 1.
+# the more conserved the column, the smaller its entropy. 
+# Entropy offers an improved method of scoring motif matrices: 
+# the entropy of a motif matrix is defined as the sum of the entropies of its columns or a measure of the uncertainty of a probability distribution
 
 import math
 
