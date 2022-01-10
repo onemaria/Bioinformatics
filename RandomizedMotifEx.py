@@ -1,3 +1,6 @@
+# a Monte Carlo algorithm
+# this is not guaranteed to return exact solutions, but they do quickly find approximate solutions
+
 import random
 
 def randomMotifs(dna,k,t):
