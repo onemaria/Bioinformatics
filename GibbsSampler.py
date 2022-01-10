@@ -1,4 +1,9 @@
+# GibbsSampler is a more cautious iterative algorithm that 
+# discards a single k-mer from the current set of motifs 
+# at each iteration and decides to either keep it or replace it with a new one.
+
 import random
+
 def GibbsSampler(Dna, k, t, N):
     BestMotifs = [] 
     Motifs = RandomMotifs(Dna, k, t)
