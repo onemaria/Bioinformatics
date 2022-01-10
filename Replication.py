@@ -1,3 +1,7 @@
+# the Minimum Skew Problem provides us with an approximate location of ori at position 
+# in most bacteria nucleotide compositions are asymmetric between the leading strand and the lagging strand: 
+# the leading strand contains more guanine (G) and thymine (T), whereas the lagging strand contains more adenine (A) and cytosine (C)
+
 def ApproximatePatternMatching(Text, Pattern, d):
     positions = []
     for i in range(len(Text)-len(Pattern)+1):
